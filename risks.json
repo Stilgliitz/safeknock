@@ -1,0 +1,35 @@
+[
+  {
+    "id": "area1",
+    "color": "green",
+    "reason": "Low risk",
+    "polygonCoords": [
+      { "latitude": 51.501, "longitude": -0.13 },
+      { "latitude": 51.502, "longitude": -0.12 },
+      { "latitude": 51.5, "longitude": -0.11 },
+      { "latitude": 51.499, "longitude": -0.12 }
+    ]
+  },
+  {
+    "id": "area2",
+    "color": "amber",
+    "reason": "Medium risk",
+    "polygonCoords": [
+      { "latitude": 51.503, "longitude": -0.14 },
+      { "latitude": 51.504, "longitude": -0.13 },
+      { "latitude": 51.502, "longitude": -0.12 },
+      { "latitude": 51.501, "longitude": -0.13 }
+    ]
+  },
+  {
+    "id": "area3",
+    "color": "red",
+    "reason": "High risk",
+    "polygonCoords": [
+      { "latitude": 51.506, "longitude": -0.15 },
+      { "latitude": 51.507, "longitude": -0.14 },
+      { "latitude": 51.505, "longitude": -0.13 },
+      { "latitude": 51.504, "longitude": -0.14 }
+    ]
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "awarenessReports",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "location.areaId", "order": "ASCENDING" },
+        { "fieldPath": "timestamp", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "awarenessReports",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "location.postcode", "order": "ASCENDING" },
+        { "fieldPath": "timestamp", "order": "DESCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

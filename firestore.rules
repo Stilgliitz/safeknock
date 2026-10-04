@@ -1,0 +1,84 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- Helpers ----------
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // True when the signed-in user is listed in the group's members array
+    function isMember(groupId) {
+      return signedIn()
+        && request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.members;
+    }
+
+    // ---------- User profiles ----------
+    // You can read and edit your own profile. Members of your group can read
+    // it too, so the app can show who is in the group.
+    match /users/{userId} {
+      allow read: if signedIn() && (
+        request.auth.uid == userId
+        || ('groupCode' in resource.data && isMember(resource.data.groupCode))
+      );
+      allow create, update: if signedIn() && request.auth.uid == userId;
+    }
+
+    // ---------- Groups ----------
+    // A group document can be fetched by anyone signed in who knows its code
+    // (that is how joining works), but groups cannot be listed or searched.
+    match /groups/{groupId} {
+      allow get: if signedIn();
+
+      allow create: if signedIn()
+        && request.resource.data.createdBy == request.auth.uid
+        && request.resource.data.members == [request.auth.uid];
+
+      // The only change allowed is adding or removing yourself as a member
+      allow update: if signedIn()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['members'])
+        && request.resource.data.members.toSet().difference(resource.data.members.toSet()).hasOnly([request.auth.uid])
+        && resource.data.members.toSet().difference(request.resource.data.members.toSet()).hasOnly([request.auth.uid]);
+
+      // Deliveries and visits are private to the group's members
+      match /packages/{packageId} {
+        allow read, write: if isMember(groupId);
+      }
+
+      match /visits/{visitId} {
+        allow read, write: if isMember(groupId);
+      }
+    }
+
+    // ---------- Community awareness reports ----------
+    // Any signed-in user can read reports and add one in their own name.
+    // Reports cannot be edited or deleted from the app.
+    match /awarenessReports/{reportId} {
+      allow read: if signedIn();
+      allow create: if signedIn()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.description is string
+        && request.resource.data.description.size() > 0
+        && request.resource.data.description.size() <= 1000;
+    }
+
+    // ---------- Risk data ----------
+    // Written only by the backend (Cloud Functions and import scripts use the
+    // Admin SDK, which bypasses these rules). The app can only read it.
+    match /area_risk_scores/{areaId} {
+      allow read: if signedIn();
+    }
+
+    match /riskAggregates/{postcode} {
+      allow read: if signedIn();
+    }
+
+    match /hotspots/{postcode} {
+      allow read: if signedIn();
+    }
+
+    // Everything else is denied by default.
+  }
+}

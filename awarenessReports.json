@@ -1,0 +1,26 @@
+[
+  {
+    "id": "report1",
+    "description": "Suspicious person loitering near park.",
+    "location": {
+      "areaId": "area1",
+      "postcode": "AB12CD"
+    },
+    "timestamp": { "timestampValue": "2025-08-10T16:30:00Z" },
+    "aiRiskScore": "amber",
+    "aiExplanation": "Loitering in a low crime area is suspicious.",
+    "userId": "user123"
+  },
+  {
+    "id": "report2",
+    "description": "Loud noise and shouting at night.",
+    "location": {
+      "areaId": "area2",
+      "postcode": "AB12CD"
+    },
+    "timestamp": { "timestampValue": "2025-08-09T22:15:00Z" },
+    "aiRiskScore": "red",
+    "aiExplanation": "High risk due to noise disturbance and potential violence.",
+    "userId": "user456"
+  }
+]
